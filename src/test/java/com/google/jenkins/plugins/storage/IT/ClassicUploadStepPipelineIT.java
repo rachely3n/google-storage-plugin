@@ -2,12 +2,21 @@ package com.google.jenkins.plugins.storage.IT;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.cloudbees.plugins.credentials.Credentials;
+import com.cloudbees.plugins.credentials.CredentialsStore;
+import com.cloudbees.plugins.credentials.SystemCredentialsProvider;
+import com.cloudbees.plugins.credentials.domains.Domain;
+import com.google.jenkins.plugins.credentials.oauth
+        .GoogleRobotPrivateKeyCredentials;
+import com.google.jenkins.plugins.credentials.oauth.ServiceAccountConfig;
+import com.google.jenkins.plugins.storage.StringJsonServiceAccountConfig;
 import hudson.EnvVars;
 import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.jvnet.hudson.test.JenkinsRule;
 
+/** Class for pipeline integration tests for ClassicUploadStep */
 public class ClassicUploadStepPipelineIT {
   private static final Logger LOGGER =
       Logger.getLogger(ClassicUploadStepPipelineIT.class.getName());
@@ -27,11 +36,11 @@ public class ClassicUploadStepPipelineIT {
     String serviceAccountKeyJson = System.getenv("GOOGLE_CREDENTIALS");
     assertNotNull("GOOGLE_CREDENTIALS env var must be set", serviceAccountKeyJson);
     credentialsId = projectId;
-    //    ServiceAccountConfig sac = new StringJsonServiceAccountConfig(serviceAccountKeyJson);
-    //    Credentials c = (Credentials) new GoogleRobotPrivateKeyCredentials(credentialsId, sac,
-    // null);
-    //    CredentialsStore store =
-    //        new SystemCredentialsProvider.ProviderImpl().getStore(jenkinsRule.jenkins);
-    //    store.addCredentials(Domain.global(), c);
+    ServiceAccountConfig sac = new StringJsonServiceAccountConfig(serviceAccountKeyJson);
+        Credentials c = (Credentials) new GoogleRobotPrivateKeyCredentials(credentialsId, sac,
+     null);
+        CredentialsStore store =
+            new SystemCredentialsProvider.ProviderImpl().getStore(jenkinsRule.jenkins);
+        store.addCredentials(Domain.global(), c);
   }
 }
